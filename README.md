@@ -1,4 +1,4 @@
-# Predicting Log Error from Zillow's Value Estimate of So-Cal Homes
+# Predicting Log Error from Zillow's Zestimate
 
 This project is an extension of a previous project. View the github of the previous project here: [**Predicting Tax Assessed Home Values**](https://github.com/Estimating-Home-Value/regression-project)
 
