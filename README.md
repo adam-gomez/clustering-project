@@ -97,3 +97,20 @@ Outliers were identified in the following features. Due to the significant influ
 2. Liquam feugiat ipsum non enim efficitur ornare. Nunc id sapien interdum tortor eleifend volutpat sed ut risus.
 3. Maecenas pulvinar nisl lacinia neque pretium aliquam. 
 4. Phasellus faucibus, justo eu vehicula semper, ipsum urna tincidunt magna, quis eleifend sem orci sed arcu.
+
+## How to Reproduce
+
+### First clone this repo
+
+### acquire.py 
+* Must include `env.py` file in directory.
+    * Contact [Codeup](https://codeup.com/contact/) to request access to the MySQL Server that the data is stored on.
+    * `env.py` should include the following variables
+        * `user` - should be your username
+        * `password` - your password
+        * `host` - the host address for the MySQL Server
+
+### prepare.py
+* The functions in prepare.py and features.py can be imported to another file. Each function is specific to the task developed during the data science pipeline of this project and may need to be altered to suit different purposes. 
+### model.ipynb
+* Aenean viverra accumsan massa, vitae tincidunt risus laoreet sed. Donec fermentum, mauris quis porttitor mollis, ante magna hendrerit lorem, in blandit risus turpis id nisi.
