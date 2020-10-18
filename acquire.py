@@ -42,7 +42,8 @@ LEFT JOIN typeconstructiontype
 	ON prop.typeconstructiontypeid = typeconstructiontype.typeconstructiontypeid
 WHERE latitude IS NOT NULL 
 	AND longitude IS NOT NULL
-	AND transactiondate BETWEEN '2017-01-01' AND '2017-12-31';
+	AND transactiondate BETWEEN '2017-01-01' AND '2017-12-31'
+    AND prop.propertylandusetypeid IN (261, 262, 263, 264, 266, 268, 269, 273, 275, 276, 279)
 '''
 
 def acquire_cache_zillow():
@@ -70,18 +71,20 @@ def map_county(row):
         return 'Ventura'
 
 def wrangle_zillow(df):
-	df = df[(df.propertylandusedesc == 'Single Family Residential')|(df.propertylandusedesc == 'Condominium')|(df.propertylandusedesc == 'Planned Unit Development')|(df.propertylandusedesc == 'Mobile Home')|(df.propertylandusedesc == 'Manufactured, Modular, Prefabricated Homes')|(df.propertylandusedesc == 'Residential General')]
-	df = df[df.bedroomcnt > 0]
-	df = df[~(df.unitcnt > 1)]
-	handle_missing_values(df)
-	df.drop(columns=['assessmentyear', 'calculatedbathnbr', 'finishedsquarefeet12', 'propertyzoningdesc', 'regionidcity', 'roomcnt', 'unitcnt'], inplace=True)
-	df = df.dropna(subset=['censustractandblock'])
-	df = df.dropna(subset=['regionidzip'])
-	columns_to_change = ['id', 'parcelid', 'fips', 'heatingorsystemtypeid', 'propertylandusetypeid', 'rawcensustractandblock', 'regionidcounty', 'regionidzip', 'censustractandblock']
-	for column in columns_to_change:
-		df[column] = df[column].astype(object)
-	df['fips'] = df.apply(lambda row: map_county(row), axis = 1)
-	return df
+    df = df[df.bedroomcnt > 0]
+    df = df[df.bathroomcnt > 0]
+    df = df[~(df.unitcnt > 1)]
+    df = df[df.calculatedfinishedsquarefeet > 0]
+    df = df.loc[:,~df.columns.duplicated()]
+    handle_missing_values(df)
+    df.drop(columns=['id', 'parcelid', 'assessmentyear', 'calculatedbathnbr', 'finishedsquarefeet12', 'propertyzoningdesc', 'regionidcity', 'roomcnt', 'unitcnt'], inplace=True)
+    df = df.dropna(subset=['censustractandblock'])
+    df = df.dropna(subset=['regionidzip'])
+    columns_to_change = ['fips', 'heatingorsystemtypeid', 'propertylandusetypeid', 'rawcensustractandblock', 'regionidcounty', 'regionidzip', 'censustractandblock']
+    for column in columns_to_change:
+    	df[column] = df[column].astype(object)
+    df['fips'] = df.apply(lambda row: map_county(row), axis = 1)
+    return df
 
 def split_impute_zillow(df, pct=0.10):
 	'''

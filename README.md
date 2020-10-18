@@ -67,23 +67,38 @@ This project is an extension of a previous project. View the github of the previ
 
 Additional columns were present in the zillow database but had greater than 20% null values and were dropped during initial consideration. 
 
-## Data Validation
-The following considerations were taken with the data:
-1. Initial SQL query produced 20,364 records that met the following requirements:
-    * Transaction Date between 2017-01-01 and 2017-12-31
-    * Property classified as one of the following Types:
+## Data Acquisition and Validation
+The data was acquired through the acquire.prepare_zillow function that performed the following:
+1. Retrieved 73,695 records from the Codeup Zillow database using a SQL query with the following requirements:
+    1. Transaction Date between 2017-01-01 and 2017-12-31
+    2. Property classified as one of the following Types:
         * Single Family Residential
         * Rural Residence
         * Mobile Home
         * Townhouse
         * Condominium
         * Row House
+        * Planned Unit Development
         * Bungalow
-        * Manufactured, Modular, Prefabricated Homes
         * Patio Home
-        * Inferred Single Family Residence
-2. Records containing 0 bathrooms, 0 bedrooms, or null square footage were dropped
+        * Inferred Single Family Residential
+    3. Latitude and Longitude data is not null.
+    4. For properties with more than one transaction date, only the record containing the latest transaction dates were returned.
+2. Records containing 0 bathrooms, 0 bedrooms, or 0 square footage were dropped.
+3. Records with a unitcnt greater than 1 were dropped.
 3. Duplicate records were dropped. These entries may represent "back-to-back" closings on the same day between three parties.
+4. Columns with greater than 50% missing values were dropped
+5. Records missing more than 25% of their values were dropped
+6. The following columns were dropped:
+    * **id** - The information contained in this column is a unique identifier within the SQL database. The data has no meaning specific to the unique characteristics of the property. 
+    * **parcelid** - Similar to id, this data represents a unique identifier for the SQL database. 
+    * **assessmentyear** - Every entry for the data in question has the same value (2016) and will provide no insight during modeling.
+    * **calculatedbathnbr** - Contains a large number of null values. This feature may be derived from some combination of full bathrooms, half bathrooms, or three-quarter bathrooms. calculatedbathnbr will be dropped due to the lack of clarity on the meaning of this column, the small number of null values, and the presence of data already captured by bathroomcnt.
+    * **finishedsquarefeet12** - Contains a large number of null values. This feature is nearly identical to calculatedfinishedsquarefeet, which has fewer null values. 
+    * **propertyzoningdesc** - Contains a large number of null values. The property zoning description has a large number of categorical values. One-hot encoding would result in an substantial increase in the number of features for any future modeling. These zoning descriptions can represent significantly different situations, therefore imputing these values is not recommended. 
+    * **regionidcity** - Similar to propertyzoningdesc, these categorical values can represent significantly different characteristics and aren't simple to impute. Rather than losing the rows that have missing values for this feature, this column will be removed, as there are other similar features providing geographical information.
+    * **roomcnt** - Over 50% of these are recorded as 0. It is nonsensical to have a property with 0 rooms, which means that these zeroes represent null values. 
+    * **unitcnt** - Data from this column was used to identify and eliminate properties that had a unit count higher than 1. At this point, the remaining data within this column is identical and will provide no insight during modeling. 
 
 ## Managing Outliers
 Outliers were identified in the following features. Due to the significant influence of outliers on clustering techniques, the following considerations were made:
