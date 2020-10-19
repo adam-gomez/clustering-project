@@ -146,11 +146,34 @@ def split_impute_zillow(df, pct=0.10):
 	
 	return train, validate, test
 
+def compress_outliers(df):
+    '''
+    Takes in a dataframe and identifies the interquartile range (IQR) of each numeric column.
+    An upper threshold is defined for each column equal to the 75th percentile + 6 * IQR.
+    A lower threshold is defined for each column equal to the 25th percentile - 6 * IQR.
+    Any values above the upper threshold are set to be equal to the upper threshold.
+    Any values below the lower threshold are set to be equal to the lower threshold.
+    Returns the modified dataframe.
+    '''
+    columns = df.columns.to_list()
+    for column in columns:
+        if df[column].dtype == 'object':
+            continue
+        else:
+            q1, q3 = df[column].quantile([.25, .75])
+            IQR = q3 - q1
+            upper_threshold = q3 + 6 * IQR
+            lower_threshold = q1 - 6 * IQR 
+            df[column] = df[column].apply(lambda x: upper_threshold if x > upper_threshold else x)
+            df[column] = df[column].apply(lambda x: lower_threshold if x < lower_threshold else x)
+    return df
+
 def prepare_zillow():
 	df = acquire_cache_zillow()
 	df = wrangle_zillow(df)
-	train, validate, test = split_impute_zillow(df)
-	return train, validate, test
+    df = compress_outliers(df)
+    train, validate, test = split_impute_zillow(df)
+    return train, validate, test
 
 def standard_scaler(train, validate, test):
     '''
@@ -188,3 +211,5 @@ def scale_inverse(scaler, train_scaled, validate_scaled, test_scaled):
     validate_unscaled = pd.DataFrame(scaler.inverse_transform(validate_scaled), columns=validate_scaled.columns.values).set_index([validate_scaled.index.values])
     test_unscaled = pd.DataFrame(scaler.inverse_transform(test_scaled), columns=test_scaled.columns.values).set_index([test_scaled.index.values])
     return train_unscaled, validate_unscaled, test_unscaled
+
+
