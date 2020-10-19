@@ -105,9 +105,26 @@ The data was acquired through the acquire.prepare_zillow function that performed
     * **regionidcity** - Similar to propertyzoningdesc, these categorical values can represent significantly different characteristics and aren't simple to impute. Rather than losing the rows that have missing values for this feature, this column will be removed, as there are other similar features providing geographical information.
     * **roomcnt** - Over 50% of these are recorded as 0. It is nonsensical to have a property with 0 rooms, which means that these zeroes represent null values. This column exceeds our 50% threshold for null values. 
     * **unitcnt** - Data from this column was used to identify and eliminate properties that had a unit count higher than 1. At this point, the remaining data within this column is identical and will provide no insight during modeling. 
+7. Records containing any missing value in the following columns were dropped:
+    * **censustractandblock** 
+    * **regionidzip**
+8. Categorical variables not stored as object type were converted to objects.
+9. Numeric codes in the fips column were converted to their relevant county name. 
+10. Remaining missing values were imputed as either the mean, median, or mode of each column. Generally, median was used for skewed distributions, mean was used for more symmetrically distributed data, and mode was used for categorical variables.
+    * **buildingqualitytypeid** - Mean
+    * **calculatedfinishedsquarefeet** - Median
+    * **fullbathcnt** - Median
+    * **heatingorsystemtypeid** - Mode
+    * **heatingorsystemdesc** - Mode
+    * **lotsizesquarefeet** - Median
+    * **yearbuilt** - Mean
+    * **structuretaxvaluedollarcnt** - Median
+    * **taxvaluedollarcnt** - Median
+    * **landtaxvaluedollarcnt** - Median
+    * **taxamount** - Median
 
 ## Managing Outliers
-Outliers were defined as values exceeding six times the interquartile range. Values exceeding this threshold were squeezed (i.e. they were made equal to the threshold). 
+Outliers were defined as values exceeding six times the interquartile range. Values exceeding this threshold were squeezed (i.e. they were made equal to the threshold). It is recognized that imputing values before handling outliers may result in the imputed values not perfectly matching the mean or median, but the difference is negligible. This may represent an opportunity for a slight improvement in future models.
 
 ## Key Findings and Takeways:
 1. Aenean faucibus purus nec felis vehicula, vel varius orci tempus. 
