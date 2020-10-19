@@ -43,34 +43,34 @@ This project is an extension of a previous project. View the github of the previ
 | Column | Description |
 | --- | ---|
 | id | Autoincremented unique index id for each record |
-| parcelid | Unique number id for each property |
-| bathroomcnt | Number of Bathrooms; Includes halfbaths as 0.5 |
-| bedroomcnt | Number of Bedrooms |
-| buildingqualitytypeid | Number ranging from 0 to 12 |
-| calculatedbathnbr | Precise meaning unknown, but appears to be redundant with bathroomcnt and bedroomcnt |
-| calculatedfinishedsquarefeet | Total square feet of home; doesn't include property square feet |
-| finishedsquarefeet12| Unknown, but appears to be redundant with calculatedfinishedsquarefeet | 
+| parcelid | Unique identifier for parcels (lots) |
+| bathroomcnt | Number of bathrroms in home including fractional bathrooms |
+| bedroomcnt | Number of bedrooms in home |
+| buildingqualitytypeid | Overall assessment of condition of the building from best (lowest) to worst (highest) |
+| calculatedbathnbr | Number of bathrooms in home including fractional bathrooms. Appears to be redundant with bathroomcnt |
+| calculatedfinishedsquarefeet | Calculated total finished living area of the home |
+| finishedsquarefeet12| Finished living area | 
 | fips | Federal Information Processing System codes used to identify unique geographical areas, converted to county names during data prepartion | 
-| fullbathcnt | Number of full bathrooms |
+| fullbathcnt | Number of full bathrooms (sink, shower + bathtub, and toilet) |
 | heatingorsystemtypeid | Numeric value representing a heating system type. Matches heatingorsystemdesc | 
 | latitude | The latitude of the property
 | longitude | The longitude of the property |
-| lotsizesquarefeet| The size of the total property lot |
-| propertycountylandusecode | Unknown, but represents categorical government code |
-| propertylandusetypeid |  Numeric categorical variable describing the general type of property |
-| propertyzoningdesc | Alphanumeric code for legal zoning type | 
+| lotsizesquarefeet| Area of the lot in square feet |
+| propertycountylandusecode | County land use code i.e. it's zoning at the county level |
+| propertylandusetypeid |  Type of land use the property is zoned for |
+| propertyzoningdesc | Description of the allowed land uses (zoning) for that property | 
 | rawcensustractandblock | Government id for each property linked to geographic location |
-| regionidcity | Categorical variable identifying geographic location |
-| regionidcounty | Categorical variable identifying geographic location |
-| regionidzip | Property zip code | 
-| roomcnt | Number of rooms |
+| regionidcity | City in which the property is located (if any) |
+| regionidcounty | County in which the property is located |
+| regionidzip | Zip code in which the property is located | 
+| roomcnt | Total number of rooms in the principal residence |
 | unitcnt | Number representing the number of units on the property |
-| yearbuilt | The year the house was built |
+| yearbuilt | The year the principal residence was built |
 | structuretaxvaluedollarcnt | The tax assessed value of only the property structure in USD |
 | taxvaluedollarcnt | The tax accessed value of the property in USD | 
 | assessmentyear | Year that the tax value was assessed |
-| landtaxvaluedollarcnt | The tax assessed value of only the land lot for the property |
-| taxamount | The amount paid in taxes by the landowner in USD |
+| landtaxvaluedollarcnt | The tax assessed value of only the land area for the parcel |
+| taxamount | The total property tax assessed for that assessment year |
 | censustractandblock | Redundant with rawcensustractandblock |
 | logerror | log error of Zillow's Zestimate model |
 | transactiondate | Four digit year, two digit month, two digit date | 
@@ -117,7 +117,7 @@ The data was acquired through the acquire.prepare_zillow function that performed
 8. Categorical variables not stored as object type were converted to objects.
 9. Numeric codes in the fips column were converted to their relevant county name.
 10. Outliers were defined as values exceeding six times the interquartile range. Values exceeding this threshold were squeezed (i.e. they were made equal to the threshold).
-10. Remaining missing values were imputed as either the mean, median, or mode of each column. Generally, median was used for skewed distributions, mean was used for more symmetrically distributed data, and mode was used for categorical variables.
+11. Remaining missing values were imputed as either the mean, median, or mode of each column. Generally, median was used for skewed distributions, mean was used for more symmetrically distributed data, and mode was used for categorical variables.
     * **buildingqualitytypeid** - Mean
     * **calculatedfinishedsquarefeet** - Median
     * **fullbathcnt** - Median

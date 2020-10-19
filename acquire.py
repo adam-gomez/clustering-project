@@ -4,7 +4,6 @@ from os import path
 import math
 import os
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler, QuantileTransformer, PowerTransformer, RobustScaler, MinMaxScaler
 
 def get_connection(database):
     '''
@@ -159,7 +158,7 @@ def compress_outliers(df):
     for column in columns:
         if df[column].dtype == 'object':
             continue
-        elif: column = 'logerror'
+        elif column == 'logerror':
             continue
         else:
             q1, q3 = df[column].quantile([.25, .75])
@@ -176,43 +175,3 @@ def prepare_zillow():
     df = compress_outliers(df)
     train, validate, test = split_impute_zillow(df)
     return train, validate, test
-
-
-def standard_scaler(train, validate, test):
-    '''
-    Accepts three dataframes and applies a standard scaler to convert values in each dataframe
-    based on the mean and standard deviation of each dataframe respectfully. 
-    Columns containing object data types are dropped, as strings cannot be directly scaled.
-
-    Parameters (train, validate, test) = three dataframes being scaled
-    
-    Returns (scaler, train_scaled, validate_scaled, test_scaled)
-    '''
-    # Remove columns with object data types from each dataframe
-    train = train.select_dtypes(exclude=['object'])
-    validate = validate.select_dtypes(exclude=['object'])
-    test = test.select_dtypes(exclude=['object'])
-    # Fit the scaler to the train dataframe
-    scaler = StandardScaler(copy=True, with_mean=True, with_std=True).fit(train)
-    # Transform the scaler onto the train, validate, and test dataframes
-    train_scaled = pd.DataFrame(scaler.transform(train), columns=train.columns.values).set_index([train.index.values])
-    validate_scaled = pd.DataFrame(scaler.transform(validate), columns=validate.columns.values).set_index([validate.index.values])
-    test_scaled = pd.DataFrame(scaler.transform(test), columns=test.columns.values).set_index([test.index.values])
-    return scaler, train_scaled, validate_scaled, test_scaled
-
-def scale_inverse(scaler, train_scaled, validate_scaled, test_scaled):
-    '''
-    Takes in three dataframes and reverts them back to their unscaled values
-
-    Parameters (scaler, train_scaled, validate_scaled, test_scaled)
-    scaler = the scaler you with to use to transform scaled values to unscaled values with. Presumably the scaler used to transform the values originally. 
-    train_scaled, validate_scaled, test_scaled = the dataframes you wish to revert to unscaled values
-
-    Returns train_unscaled, validated_unscaled, test_unscaled
-    '''
-    train_unscaled = pd.DataFrame(scaler.inverse_transform(train_scaled), columns=train_scaled.columns.values).set_index([train_scaled.index.values])
-    validate_unscaled = pd.DataFrame(scaler.inverse_transform(validate_scaled), columns=validate_scaled.columns.values).set_index([validate_scaled.index.values])
-    test_unscaled = pd.DataFrame(scaler.inverse_transform(test_scaled), columns=test_scaled.columns.values).set_index([test_scaled.index.values])
-    return train_unscaled, validate_unscaled, test_unscaled
-
-
