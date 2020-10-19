@@ -36,36 +36,42 @@ This project is an extension of a previous project. View the github of the previ
 ## Data Dictionary
 | Column | Description |
 | --- | ---|
-| id | Autoincremented unique index id for each property |
+| id | Autoincremented unique index id for each record |
+| parcelid | Unique number id for each property |
 | bathroomcnt | Number of Bathrooms; Includes halfbaths as 0.5 |
 | bedroomcnt | Number of Bedrooms |
+| buildingqualitytypeid | Number ranging from 0 to 12 |
 | calculatedbathnbr | Precise meaning unknown, but appears to be redundant with bathroomcnt and bedroomcnt |
 | calculatedfinishedsquarefeet | Total square feet of home; doesn't include property square feet |
 | finishedsquarefeet12| Unknown, but appears to be redundant with calculatedfinishedsquarefeet | 
-| fips | Federal Information Processing System codes used to identify unique geographical areas | 
+| fips | Federal Information Processing System codes used to identify unique geographical areas, converted to county names during data prepartion | 
 | fullbathcnt | Number of full bathrooms |
+| heatingorsystemtypeid | Numeric value representing a heating system type. Matches heatingorsystemdesc | 
 | latitude | The latitude of the property
 | longitude | The longitude of the property |
 | lotsizesquarefeet| The size of the total property lot |
 | propertycountylandusecode | Unknown, but represents categorical government code |
-| propertylandusetypeid |  Categorical variable describing the general type of property |
+| propertylandusetypeid |  Numeric categorical variable describing the general type of property |
+| propertyzoningdesc | Alphanumeric code for legal zoning type | 
 | rawcensustractandblock | Government id for each property linked to geographic location |
 | regionidcity | Categorical variable identifying geographic location |
 | regionidcounty | Categorical variable identifying geographic location |
+| regionidzip | Property zip code | 
 | roomcnt | Number of rooms |
+| unitcnt | Number representing the number of units on the property |
 | yearbuilt | The year the house was built |
-| structuretaxvaluedollarcnt | The tax assessed value of only the property structure in USD | 
+| structuretaxvaluedollarcnt | The tax assessed value of only the property structure in USD |
+| taxvaluedollarcnt | The tax accessed value of the property in USD | 
 | assessmentyear | Year that the tax value was assessed |
 | landtaxvaluedollarcnt | The tax assessed value of only the land lot for the property |
 | taxamount | The amount paid in taxes by the landowner in USD |
-| taxvaluedollarcnt | The tax accessed value of the property in USD |
 | censustractandblock | Redundant with rawcensustractandblock |
-| logerror | Unknown |
+| logerror | log error of Zillow's Zestimate model |
 | transactiondate | Four digit year, two digit month, two digit date | 
-| taxrate | Rounded derived value by dividing the taxamount by the taxvaluedollarcnt and multiplying by 100 |
-| County | County the property is located in | 
+| heatingorsystemdesc | Description of the type of heating system on the property |
+| propertylandusedesc | Description of the type of property | 
 
-Additional columns were present in the zillow database but had greater than 20% null values and were dropped during initial consideration. 
+Additional columns were present in the zillow database but had greater than 50% null values and were dropped during initial consideration. 
 
 ## Data Acquisition and Validation
 The data was acquired through the acquire.prepare_zillow function that performed the following:
@@ -97,15 +103,11 @@ The data was acquired through the acquire.prepare_zillow function that performed
     * **finishedsquarefeet12** - Contains a large number of null values. This feature is nearly identical to calculatedfinishedsquarefeet, which has fewer null values. 
     * **propertyzoningdesc** - Contains a large number of null values. The property zoning description has a large number of categorical values. One-hot encoding would result in an substantial increase in the number of features for any future modeling. These zoning descriptions can represent significantly different situations, therefore imputing these values is not recommended. 
     * **regionidcity** - Similar to propertyzoningdesc, these categorical values can represent significantly different characteristics and aren't simple to impute. Rather than losing the rows that have missing values for this feature, this column will be removed, as there are other similar features providing geographical information.
-    * **roomcnt** - Over 50% of these are recorded as 0. It is nonsensical to have a property with 0 rooms, which means that these zeroes represent null values. 
+    * **roomcnt** - Over 50% of these are recorded as 0. It is nonsensical to have a property with 0 rooms, which means that these zeroes represent null values. This column exceeds our 50% threshold for null values. 
     * **unitcnt** - Data from this column was used to identify and eliminate properties that had a unit count higher than 1. At this point, the remaining data within this column is identical and will provide no insight during modeling. 
 
 ## Managing Outliers
-Outliers were identified in the following features. Due to the significant influence of outliers on clustering techniques, the following considerations were made:
-- Feature 1: Consideration
-- Feature 2: Consideration
-- Feature 3: Consideration
-- Feature 4: Consideration
+Outliers were defined as values exceeding six times the interquartile range. Values exceeding this threshold were squeezed (i.e. they were made equal to the threshold). 
 
 ## Key Findings and Takeways:
 1. Aenean faucibus purus nec felis vehicula, vel varius orci tempus. 
@@ -126,6 +128,6 @@ Outliers were identified in the following features. Due to the significant influ
         * `host` - the host address for the MySQL Server
 
 ### prepare.py
-* The functions in prepare.py and features.py can be imported to another file. Each function is specific to the task developed during the data science pipeline of this project and may need to be altered to suit different purposes. 
+* The functions in prepare.py can be imported to another file. Each function is specific to the task developed during the data science pipeline of this project and may need to be altered to suit different purposes. 
 ### model.ipynb
 * Aenean viverra accumsan massa, vitae tincidunt risus laoreet sed. Donec fermentum, mauris quis porttitor mollis, ante magna hendrerit lorem, in blandit risus turpis id nisi.
