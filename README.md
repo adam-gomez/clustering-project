@@ -115,7 +115,8 @@ The data was acquired through the acquire.prepare_zillow function that performed
     * **censustractandblock** 
     * **regionidzip**
 8. Categorical variables not stored as object type were converted to objects.
-9. Numeric codes in the fips column were converted to their relevant county name. 
+9. Numeric codes in the fips column were converted to their relevant county name.
+10. Outliers were defined as values exceeding six times the interquartile range. Values exceeding this threshold were squeezed (i.e. they were made equal to the threshold).
 10. Remaining missing values were imputed as either the mean, median, or mode of each column. Generally, median was used for skewed distributions, mean was used for more symmetrically distributed data, and mode was used for categorical variables.
     * **buildingqualitytypeid** - Mean
     * **calculatedfinishedsquarefeet** - Median
@@ -128,9 +129,6 @@ The data was acquired through the acquire.prepare_zillow function that performed
     * **taxvaluedollarcnt** - Median
     * **landtaxvaluedollarcnt** - Median
     * **taxamount** - Median
-
-## Managing Outliers
-Outliers were defined as values exceeding six times the interquartile range. Values exceeding this threshold were squeezed (i.e. they were made equal to the threshold). It is recognized that imputing values before handling outliers may result in the imputed values not perfectly matching the mean or median, but the difference is negligible. This may represent an opportunity for a slight improvement in future models.
 
 ## How to Reproduce
 

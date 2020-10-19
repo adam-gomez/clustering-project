@@ -169,11 +169,12 @@ def compress_outliers(df):
     return df
 
 def prepare_zillow():
-	df = acquire_cache_zillow()
-	df = wrangle_zillow(df)
+    df = acquire_cache_zillow()
+    df = wrangle_zillow(df)
     df = compress_outliers(df)
-    train, validate, test = split_impute_zillow(df)
-    return train, validate, test
+    train, validate, test = split_impute_zillow()
+    return df
+
 
 def standard_scaler(train, validate, test):
     '''
