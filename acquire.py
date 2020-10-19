@@ -148,7 +148,7 @@ def split_impute_zillow(df, pct=0.10):
 
 def compress_outliers(df):
     '''
-    Takes in a dataframe and identifies the interquartile range (IQR) of each numeric column.
+    Takes in a dataframe and identifies the interquartile range (IQR) of each numeric column except log error.
     An upper threshold is defined for each column equal to the 75th percentile + 6 * IQR.
     A lower threshold is defined for each column equal to the 25th percentile - 6 * IQR.
     Any values above the upper threshold are set to be equal to the upper threshold.
@@ -158,6 +158,8 @@ def compress_outliers(df):
     columns = df.columns.to_list()
     for column in columns:
         if df[column].dtype == 'object':
+            continue
+        elif: column = 'logerror'
             continue
         else:
             q1, q3 = df[column].quantile([.25, .75])
@@ -172,8 +174,8 @@ def prepare_zillow():
     df = acquire_cache_zillow()
     df = wrangle_zillow(df)
     df = compress_outliers(df)
-    train, validate, test = split_impute_zillow()
-    return df
+    train, validate, test = split_impute_zillow(df)
+    return train, validate, test
 
 
 def standard_scaler(train, validate, test):
