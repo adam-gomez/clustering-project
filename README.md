@@ -33,6 +33,12 @@ This project is an extension of a previous project. View the github of the previ
 - Decisions and judgment calls are made and explained/documented
 - All python code is of high quality
 
+## Key Findings and Takeways:
+1. Aenean faucibus purus nec felis vehicula, vel varius orci tempus. 
+2. Liquam feugiat ipsum non enim efficitur ornare. Nunc id sapien interdum tortor eleifend volutpat sed ut risus.
+3. Maecenas pulvinar nisl lacinia neque pretium aliquam. 
+4. Phasellus faucibus, justo eu vehicula semper, ipsum urna tincidunt magna, quis eleifend sem orci sed arcu.
+
 ## Data Dictionary
 | Column | Description |
 | --- | ---|
@@ -125,12 +131,6 @@ The data was acquired through the acquire.prepare_zillow function that performed
 
 ## Managing Outliers
 Outliers were defined as values exceeding six times the interquartile range. Values exceeding this threshold were squeezed (i.e. they were made equal to the threshold). It is recognized that imputing values before handling outliers may result in the imputed values not perfectly matching the mean or median, but the difference is negligible. This may represent an opportunity for a slight improvement in future models.
-
-## Key Findings and Takeways:
-1. Aenean faucibus purus nec felis vehicula, vel varius orci tempus. 
-2. Liquam feugiat ipsum non enim efficitur ornare. Nunc id sapien interdum tortor eleifend volutpat sed ut risus.
-3. Maecenas pulvinar nisl lacinia neque pretium aliquam. 
-4. Phasellus faucibus, justo eu vehicula semper, ipsum urna tincidunt magna, quis eleifend sem orci sed arcu.
 
 ## How to Reproduce
 
