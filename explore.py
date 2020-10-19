@@ -60,4 +60,4 @@ def plot_pairs(df):
     g = sns.PairGrid(df)
 # we can specify any two functions we want for visualization
     g.map_diag(plt.hist) # single variable
-    g.map_offdiag(sns.regplot, scatter_kws={"color": "dodgerblue"}, line_kws={"color": "orange"}) # interaction of two variables
+    g.map_offdiag(sns.regplot, scatter_kws={"color": "steelblue"}, line_kws={"color": "cyan"}) # interaction of two variables
