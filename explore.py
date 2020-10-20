@@ -61,3 +61,18 @@ def plot_pairs(df):
 # we can specify any two functions we want for visualization
     g.map_diag(plt.hist) # single variable
     g.map_offdiag(sns.regplot, scatter_kws={"color": "steelblue"}, line_kws={"color": "cyan"}) # interaction of two variables
+
+def one_hot_encoding(df, features):
+    '''
+    Takes in a dataframe (df) and a list of categorical (object type) features (features) to encode as numeric dummy variables, then drops the
+    original listed feature columns from the dataframe.
+    
+    Returns the dataframe
+    '''
+    for feature in features:
+        df[feature] = df[feature].astype(object)
+    obj_df = df[features]
+    dummy_df = pd.get_dummies(obj_df, dummy_na=False, drop_first=True)
+    df = pd.concat([df, dummy_df], axis=1)
+    df.drop(columns=features, inplace=True)
+    return df
