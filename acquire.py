@@ -82,6 +82,7 @@ def wrangle_zillow(df):
     columns_to_change = ['fips', 'heatingorsystemtypeid', 'propertylandusetypeid', 'rawcensustractandblock', 'regionidcounty', 'regionidzip', 'censustractandblock']
     for column in columns_to_change:
     	df[column] = df[column].astype(object)
+    df.heatingorsystemtypeid = df.heatingorsystemtypeid.astype(object)
     df['fips'] = df.apply(lambda row: map_county(row), axis = 1)
     return df
 

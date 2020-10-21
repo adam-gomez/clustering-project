@@ -10,10 +10,10 @@ This project is an extension of a previous project. View the github of the previ
 > Your audience for this project is a data science team. The presentation will consist of a notebook demo of the discoveries you made and work you have done related to uncovering what the drivers of the error in the zestimate is.
 
 ## Goals
-1. Identify significant drivers of log error for single unit properties in 2017
-2. Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-3. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. 
-4. Aenean viverra accumsan massa, vitae tincidunt risus laoreet sed. Donec fermentum, mauris quis porttitor mollis, ante magna hendrerit lorem, in blandit risus turpis id nisi.
+1. Identify significant drivers of log error for single unit properties in 2017.
+2. Utilize clustering methodologies to develop derived features. 
+3. Develop a model that predicts log error with a lower root mean squared error than a featureless baseline model.
+4. Discuss findings and provide recommendations for next steps.
 
 ## Deliverables
 1. A clearly named final notebook. This notebook will be what you present and should contain plenty of markdown documentation and cleaned up code.
@@ -34,10 +34,13 @@ This project is an extension of a previous project. View the github of the previ
 - All python code is of high quality
 
 ## Key Findings and Takeways:
-1. Aenean faucibus purus nec felis vehicula, vel varius orci tempus. 
-2. Liquam feugiat ipsum non enim efficitur ornare. Nunc id sapien interdum tortor eleifend volutpat sed ut risus.
-3. Maecenas pulvinar nisl lacinia neque pretium aliquam. 
-4. Phasellus faucibus, justo eu vehicula semper, ipsum urna tincidunt magna, quis eleifend sem orci sed arcu.
+1. Log error is normally distributed around a mean of 0.016
+2. Larger more valuable homes appear to be increasing the mean log error. This assertion is supported by statistical tests.
+3. A Linear Regression model with Polynomial 3rd Degree Features selected by Recursive Feature Elimination outperformed a baseline featureless model and consists of features based on the following:
+    * Square footage of the main property structure
+    * Tax assessed property value and assessed tax amounts
+    * Location
+4. While the model outperformed baseline, the improvement was marginal, and a more robust algorithm is recommended for future investigation.
 
 ## Data Dictionary
 | Column | Description |
@@ -142,7 +145,9 @@ The data was acquired through the acquire.prepare_zillow function that performed
         * `password` - your password
         * `host` - the host address for the MySQL Server
 
-### prepare.py
+### acquire.py
 * The functions in prepare.py can be imported to another file. Each function is specific to the task developed during the data science pipeline of this project and may need to be altered to suit different purposes. 
-### model.ipynb
-* Aenean viverra accumsan massa, vitae tincidunt risus laoreet sed. Donec fermentum, mauris quis porttitor mollis, ante magna hendrerit lorem, in blandit risus turpis id nisi.
+### explore.ipynb
+* The one_hot_encoding() function can be imported for more broad application, but the function will be unable to process a dataframe with dtypes other than numeric and/or object.
+* The drop_object_variables() function is highly specific to this exploration and will need to be significantly modified for broader application.
+* The visualize_regions() function is too specific to be used in applications outside of the specific use in this project.
